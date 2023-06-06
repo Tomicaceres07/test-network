@@ -1,0 +1,178 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 750px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+             #config {
+                 float: left;
+                 width: 400px;
+                 height: 600px;
+             }
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+            <div id="config"></div>
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "lightblue", "font": {"size": 35.0}, "id": "estudio", "label": "estudio", "shape": "dot", "size": 35.0, "title": "estudio"}, {"color": "lightblue", "font": {"size": 30.0}, "id": "estudiantes", "label": "estudiantes", "shape": "dot", "size": 30.0, "title": "estudiantes"}, {"color": "green", "font": {"size": 17.5}, "id": "educacion", "label": "educacion", "shape": "dot", "size": 17.5, "title": "educacion"}, {"color": "lightblue", "font": {"size": 25.0}, "id": "tiempo", "label": "tiempo", "shape": "dot", "size": 25.0, "title": "tiempo"}, {"color": "lightblue", "font": {"size": 12.5}, "id": "caso", "label": "caso", "shape": "dot", "size": 12.5, "title": "caso"}, {"color": "gray", "font": {"size": 12.5}, "id": "universidades", "label": "universidades", "shape": "dot", "size": 12.5, "title": "universidades"}, {"color": "green", "font": {"size": 45.0}, "id": "aqui", "label": "aqui", "shape": "dot", "size": 45.0, "title": "aqui"}, {"color": "lightblue", "font": {"size": 25.0}, "id": "dice", "label": "dice", "shape": "dot", "size": 25.0, "title": "dice"}, {"color": "lightblue", "font": {"size": 42.5}, "id": "openaccess", "label": "openaccess", "shape": "dot", "size": 42.5, "title": "openaccess"}, {"color": "gray", "font": {"size": 17.5}, "id": "evento", "label": "evento", "shape": "dot", "size": 17.5, "title": "evento"}, {"color": "lightblue", "font": {"size": 17.5}, "id": "facultad", "label": "facultad", "shape": "dot", "size": 17.5, "title": "facultad"}, {"color": "lightblue", "font": {"size": 62.5}, "id": "peru", "label": "peru", "shape": "dot", "size": 62.5, "title": "peru"}, {"color": "lightblue", "font": {"size": 22.5}, "id": "recomendado", "label": "recomendado", "shape": "dot", "size": 22.5, "title": "recomendado"}, {"color": "orange", "font": {"size": 25.0}, "id": "gente", "label": "gente", "shape": "dot", "size": 25.0, "title": "gente"}, {"color": "lightblue", "font": {"size": 12.5}, "id": "pais", "label": "pais", "shape": "dot", "size": 12.5, "title": "pais"}, {"color": "lightblue", "font": {"size": 30.0}, "id": "tesis", "label": "tesis", "shape": "dot", "size": 30.0, "title": "tesis"}, {"color": "gray", "font": {"size": 22.5}, "id": "dia", "label": "dia", "shape": "dot", "size": 22.5, "title": "dia"}, {"color": "lightblue", "font": {"size": 20.0}, "id": "caviares", "label": "caviares", "shape": "dot", "size": 20.0, "title": "caviares"}, {"color": "lightblue", "font": {"size": 20.0}, "id": "trabajo", "label": "trabajo", "shape": "dot", "size": 20.0, "title": "trabajo"}, {"color": "lightblue", "font": {"size": 17.5}, "id": "tesispucp", "label": "tesispucp", "shape": "dot", "size": 17.5, "title": "tesispucp"}, {"color": "lightblue", "font": {"size": 20.0}, "id": "estan", "label": "estan", "shape": "dot", "size": 20.0, "title": "estan"}, {"color": "lightblue", "font": {"size": 22.5}, "id": "a\u00f1os", "label": "a\u00f1os", "shape": "dot", "size": 22.5, "title": "a\u00f1os"}, {"color": "gray", "font": {"size": 32.5}, "id": "centro", "label": "centro", "shape": "dot", "size": 32.5, "title": "centro"}, {"color": "gray", "font": {"size": 20.0}, "id": "informacion", "label": "informacion", "shape": "dot", "size": 20.0, "title": "informacion"}, {"color": "lightblue", "font": {"size": 12.5}, "id": "compartir", "label": "compartir", "shape": "dot", "size": 12.5, "title": "compartir"}, {"color": "lightblue", "font": {"size": 15.0}, "id": "investigacion", "label": "investigacion", "shape": "dot", "size": 15.0, "title": "investigacion"}, {"color": "lightblue", "font": {"size": 35.0}, "id": "derecho", "label": "derecho", "shape": "dot", "size": 35.0, "title": "derecho"}, {"color": "lightblue", "font": {"size": 17.5}, "id": "docente", "label": "docente", "shape": "dot", "size": 17.5, "title": "docente"}, {"color": "lightblue", "font": {"size": 22.5}, "id": "gracias", "label": "gracias", "shape": "dot", "size": 22.5, "title": "gracias"}, {"color": "lightblue", "font": {"size": 15.0}, "id": "vida", "label": "vida", "shape": "dot", "size": 15.0, "title": "vida"}, {"color": "lightblue", "font": {"size": 22.5}, "id": "lima", "label": "lima", "shape": "dot", "size": 22.5, "title": "lima"}, {"color": "gray", "font": {"size": 25.0}, "id": "mayo", "label": "mayo", "shape": "dot", "size": 25.0, "title": "mayo"}, {"color": "lightblue", "font": {"size": 45.0}, "id": "universidad", "label": "universidad", "shape": "dot", "size": 45.0, "title": "universidad"}, {"color": "gray", "font": {"size": 5.0}, "id": "gestion", "label": "gestion", "shape": "dot", "size": 5.0, "title": "gestion"}, {"color": "lightblue", "font": {"size": 25.0}, "id": "siempre", "label": "siempre", "shape": "dot", "size": 25.0, "title": "siempre"}, {"color": "lightblue", "font": {"size": 22.5}, "id": "caviar", "label": "caviar", "shape": "dot", "size": 22.5, "title": "caviar"}, {"color": "lightblue", "font": {"size": 25.0}, "id": "profesor", "label": "profesor", "shape": "dot", "size": 25.0, "title": "profesor"}, {"color": "orange", "font": {"size": 17.5}, "id": "izquierda", "label": "izquierda", "shape": "dot", "size": 17.5, "title": "izquierda"}, {"color": "lightblue", "font": {"size": 100.0}, "id": "pucp", "label": "pucp", "shape": "dot", "size": 100.0, "title": "pucp"}, {"color": "lightblue", "font": {"size": 27.500000000000004}, "id": "ultimo", "label": "ultimo", "shape": "dot", "size": 27.500000000000004, "title": "ultimo"}]);
+                  edges = new vis.DataSet([{"color": "lightblue", "from": "estudio", "to": "dia", "value": 2.875, "width": 2.875}, {"color": "lightblue", "from": "estudio", "to": "pucp", "value": 6.75, "width": 6.75}, {"color": "lightblue", "from": "estudio", "to": "compartir", "value": 2.375, "width": 2.375}, {"color": "lightblue", "from": "estudio", "to": "ultimo", "value": 3.125, "width": 3.125}, {"color": "lightblue", "from": "estudio", "to": "a\u00f1os", "value": 2.875, "width": 2.875}, {"color": "lightblue", "from": "estudio", "to": "investigacion", "value": 2.5, "width": 2.5}, {"color": "lightblue", "from": "estudio", "to": "universidad", "value": 4.0, "width": 4.0}, {"color": "lightblue", "from": "estudio", "to": "recomendado", "value": 2.875, "width": 2.875}, {"color": "lightblue", "from": "estudio", "to": "tesis", "value": 3.25, "width": 3.25}, {"color": "lightblue", "from": "estudio", "to": "centro", "value": 3.375, "width": 3.375}, {"color": "lightblue", "from": "estudio", "to": "openaccess", "value": 3.875, "width": 3.875}, {"color": "lightblue", "from": "estudio", "to": "derecho", "value": 3.5, "width": 3.5}, {"color": "lightblue", "from": "estudio", "to": "izquierda", "value": 2.625, "width": 2.625}, {"color": "lightblue", "from": "estudio", "to": "trabajo", "value": 2.75, "width": 2.75}, {"color": "lightblue", "from": "estudiantes", "to": "pucp", "value": 6.5, "width": 6.5}, {"color": "lightblue", "from": "estudiantes", "to": "compartir", "value": 2.125, "width": 2.125}, {"color": "lightblue", "from": "estudiantes", "to": "universidad", "value": 3.75, "width": 3.75}, {"color": "lightblue", "from": "estudiantes", "to": "derecho", "value": 3.25, "width": 3.25}, {"color": "lightblue", "from": "estudiantes", "to": "centro", "value": 3.125, "width": 3.125}, {"color": "lightblue", "from": "estudiantes", "to": "tiempo", "value": 2.75, "width": 2.75}, {"color": "lightblue", "from": "estudiantes", "to": "peru", "value": 4.625, "width": 4.625}, {"color": "lightblue", "from": "estudiantes", "to": "facultad", "value": 2.375, "width": 2.375}, {"color": "lightblue", "from": "estudiantes", "to": "siempre", "value": 2.75, "width": 2.75}, {"color": "lightblue", "from": "estudiantes", "to": "a\u00f1os", "value": 2.625, "width": 2.625}, {"color": "lightblue", "from": "estudiantes", "to": "estan", "value": 2.5, "width": 2.5}, {"color": "lightblue", "from": "estudiantes", "to": "ultimo", "value": 2.875, "width": 2.875}, {"color": "green", "from": "educacion", "to": "pucp", "value": 5.875, "width": 5.875}, {"color": "green", "from": "educacion", "to": "docente", "value": 1.75, "width": 1.75}, {"color": "green", "from": "educacion", "to": "peru", "value": 4.0, "width": 4.0}, {"color": "green", "from": "educacion", "to": "investigacion", "value": 1.625, "width": 1.625}, {"color": "green", "from": "educacion", "to": "facultad", "value": 1.75, "width": 1.75}, {"color": "green", "from": "educacion", "to": "vida", "value": 1.625, "width": 1.625}, {"color": "green", "from": "educacion", "to": "derecho", "value": 2.625, "width": 2.625}, {"color": "lightblue", "from": "tiempo", "to": "docente", "value": 2.125, "width": 2.125}, {"color": "lightblue", "from": "tiempo", "to": "gente", "value": 2.5, "width": 2.5}, {"color": "lightblue", "from": "tiempo", "to": "dice", "value": 2.5, "width": 2.5}, {"color": "lightblue", "from": "tiempo", "to": "pucp", "value": 6.25, "width": 6.25}, {"color": "lightblue", "from": "tiempo", "to": "profesor", "value": 2.5, "width": 2.5}, {"color": "lightblue", "from": "tiempo", "to": "openaccess", "value": 3.375, "width": 3.375}, {"color": "lightblue", "from": "tiempo", "to": "universidad", "value": 3.5, "width": 3.5}, {"color": "lightblue", "from": "tiempo", "to": "tesis", "value": 2.75, "width": 2.75}, {"color": "lightblue", "from": "tiempo", "to": "recomendado", "value": 2.375, "width": 2.375}, {"color": "lightblue", "from": "caso", "to": "vida", "value": 1.375, "width": 1.375}, {"color": "lightblue", "from": "caso", "to": "tesispucp", "value": 1.5, "width": 1.5}, {"color": "lightblue", "from": "caso", "to": "pucp", "value": 5.625, "width": 5.625}, {"color": "lightblue", "from": "caso", "to": "profesor", "value": 1.875, "width": 1.875}, {"color": "lightblue", "from": "caso", "to": "peru", "value": 3.75, "width": 3.75}, {"color": "gray", "from": "universidades", "to": "peru", "value": 3.75, "width": 3.75}, {"color": "gray", "from": "universidades", "to": "openaccess", "value": 2.75, "width": 2.75}, {"color": "gray", "from": "universidades", "to": "pucp", "value": 5.625, "width": 5.625}, {"color": "gray", "from": "universidades", "to": "lima", "value": 1.75, "width": 1.75}, {"color": "gray", "from": "universidades", "to": "universidad", "value": 2.875, "width": 2.875}, {"color": "green", "from": "aqui", "to": "evento", "value": 3.125, "width": 3.125}, {"color": "green", "from": "aqui", "to": "recomendado", "value": 3.375, "width": 3.375}, {"color": "green", "from": "aqui", "to": "aqui", "value": 4.5, "width": 4.5}, {"color": "green", "from": "aqui", "to": "pucp", "value": 7.25, "width": 7.25}, {"color": "green", "from": "aqui", "to": "mayo", "value": 3.5, "width": 3.5}, {"color": "green", "from": "aqui", "to": "profesor", "value": 3.5, "width": 3.5}, {"color": "green", "from": "aqui", "to": "tesis", "value": 3.75, "width": 3.75}, {"color": "green", "from": "aqui", "to": "informacion", "value": 3.25, "width": 3.25}, {"color": "green", "from": "aqui", "to": "caviar", "value": 3.375, "width": 3.375}, {"color": "green", "from": "aqui", "to": "siempre", "value": 3.5, "width": 3.5}, {"color": "green", "from": "aqui", "to": "peru", "value": 5.375, "width": 5.375}, {"color": "green", "from": "aqui", "to": "estan", "value": 3.25, "width": 3.25}, {"color": "green", "from": "aqui", "to": "izquierda", "value": 3.125, "width": 3.125}, {"color": "green", "from": "aqui", "to": "derecho", "value": 4.0, "width": 4.0}, {"color": "green", "from": "aqui", "to": "vida", "value": 3.0, "width": 3.0}, {"color": "green", "from": "aqui", "to": "ultimo", "value": 3.625, "width": 3.625}, {"color": "green", "from": "aqui", "to": "gracias", "value": 3.375, "width": 3.375}, {"color": "lightblue", "from": "dice", "to": "profesor", "value": 2.5, "width": 2.5}, {"color": "lightblue", "from": "dice", "to": "pucp", "value": 6.25, "width": 6.25}, {"color": "lightblue", "from": "dice", "to": "universidad", "value": 3.5, "width": 3.5}, {"color": "lightblue", "from": "dice", "to": "recomendado", "value": 2.375, "width": 2.375}, {"color": "lightblue", "from": "dice", "to": "peru", "value": 4.375, "width": 4.375}, {"color": "lightblue", "from": "dice", "to": "docente", "value": 2.125, "width": 2.125}, {"color": "lightblue", "from": "dice", "to": "caviar", "value": 2.375, "width": 2.375}, {"color": "lightblue", "from": "dice", "to": "gente", "value": 2.5, "width": 2.5}, {"color": "lightblue", "from": "dice", "to": "derecho", "value": 3.0, "width": 3.0}, {"color": "lightblue", "from": "openaccess", "to": "compartir", "value": 2.75, "width": 2.75}, {"color": "lightblue", "from": "openaccess", "to": "ultimo", "value": 3.5, "width": 3.5}, {"color": "lightblue", "from": "openaccess", "to": "recomendado", "value": 3.25, "width": 3.25}, {"color": "lightblue", "from": "openaccess", "to": "pucp", "value": 7.125, "width": 7.125}, {"color": "lightblue", "from": "openaccess", "to": "estan", "value": 3.125, "width": 3.125}, {"color": "lightblue", "from": "openaccess", "to": "derecho", "value": 3.875, "width": 3.875}, {"color": "lightblue", "from": "openaccess", "to": "gracias", "value": 3.25, "width": 3.25}, {"color": "lightblue", "from": "openaccess", "to": "peru", "value": 5.25, "width": 5.25}, {"color": "lightblue", "from": "openaccess", "to": "informacion", "value": 3.125, "width": 3.125}, {"color": "lightblue", "from": "openaccess", "to": "siempre", "value": 3.375, "width": 3.375}, {"color": "lightblue", "from": "openaccess", "to": "mayo", "value": 3.375, "width": 3.375}, {"color": "lightblue", "from": "openaccess", "to": "gente", "value": 3.375, "width": 3.375}, {"color": "lightblue", "from": "openaccess", "to": "centro", "value": 3.75, "width": 3.75}, {"color": "lightblue", "from": "openaccess", "to": "docente", "value": 3.0, "width": 3.0}, {"color": "gray", "from": "evento", "to": "pucp", "value": 5.875, "width": 5.875}, {"color": "gray", "from": "evento", "to": "centro", "value": 2.5, "width": 2.5}, {"color": "gray", "from": "evento", "to": "informacion", "value": 1.875, "width": 1.875}, {"color": "gray", "from": "evento", "to": "recomendado", "value": 2.0, "width": 2.0}, {"color": "gray", "from": "evento", "to": "mayo", "value": 2.125, "width": 2.125}, {"color": "gray", "from": "evento", "to": "dia", "value": 2.0, "width": 2.0}, {"color": "lightblue", "from": "facultad", "to": "derecho", "value": 2.625, "width": 2.625}, {"color": "lightblue", "from": "facultad", "to": "pucp", "value": 5.875, "width": 5.875}, {"color": "lightblue", "from": "facultad", "to": "profesor", "value": 2.125, "width": 2.125}, {"color": "lightblue", "from": "facultad", "to": "gestion", "value": 1.125, "width": 1.125}, {"color": "lightblue", "from": "facultad", "to": "gente", "value": 2.125, "width": 2.125}, {"color": "lightblue", "from": "peru", "to": "caviar", "value": 4.25, "width": 4.25}, {"color": "lightblue", "from": "peru", "to": "pucp", "value": 8.125, "width": 8.125}, {"color": "lightblue", "from": "peru", "to": "gente", "value": 4.375, "width": 4.375}, {"color": "lightblue", "from": "peru", "to": "siempre", "value": 4.375, "width": 4.375}, {"color": "lightblue", "from": "peru", "to": "tesispucp", "value": 4.0, "width": 4.0}, {"color": "lightblue", "from": "peru", "to": "peru", "value": 6.25, "width": 6.25}, {"color": "lightblue", "from": "peru", "to": "tesis", "value": 4.625, "width": 4.625}, {"color": "lightblue", "from": "peru", "to": "lima", "value": 4.25, "width": 4.25}, {"color": "lightblue", "from": "peru", "to": "caviares", "value": 4.125, "width": 4.125}, {"color": "lightblue", "from": "peru", "to": "investigacion", "value": 3.875, "width": 3.875}, {"color": "lightblue", "from": "peru", "to": "universidad", "value": 5.375, "width": 5.375}, {"color": "lightblue", "from": "peru", "to": "informacion", "value": 4.125, "width": 4.125}, {"color": "lightblue", "from": "peru", "to": "gracias", "value": 4.25, "width": 4.25}, {"color": "lightblue", "from": "peru", "to": "ultimo", "value": 4.5, "width": 4.5}, {"color": "lightblue", "from": "peru", "to": "pais", "value": 3.75, "width": 3.75}, {"color": "lightblue", "from": "peru", "to": "centro", "value": 4.75, "width": 4.75}, {"color": "lightblue", "from": "peru", "to": "profesor", "value": 4.375, "width": 4.375}, {"color": "lightblue", "from": "recomendado", "to": "pucp", "value": 6.125, "width": 6.125}, {"color": "lightblue", "from": "recomendado", "to": "caviar", "value": 2.25, "width": 2.25}, {"color": "lightblue", "from": "recomendado", "to": "mayo", "value": 2.375, "width": 2.375}, {"color": "orange", "from": "gente", "to": "pucp", "value": 6.25, "width": 6.25}, {"color": "orange", "from": "gente", "to": "dia", "value": 2.375, "width": 2.375}, {"color": "orange", "from": "gente", "to": "izquierda", "value": 2.125, "width": 2.125}, {"color": "orange", "from": "gente", "to": "derecho", "value": 3.0, "width": 3.0}, {"color": "orange", "from": "gente", "to": "caviares", "value": 2.25, "width": 2.25}, {"color": "lightblue", "from": "pais", "to": "universidad", "value": 2.875, "width": 2.875}, {"color": "lightblue", "from": "pais", "to": "siempre", "value": 1.875, "width": 1.875}, {"color": "lightblue", "from": "pais", "to": "compartir", "value": 1.25, "width": 1.25}, {"color": "lightblue", "from": "pais", "to": "pucp", "value": 5.625, "width": 5.625}, {"color": "lightblue", "from": "tesis", "to": "pucp", "value": 6.5, "width": 6.5}, {"color": "lightblue", "from": "tesis", "to": "derecho", "value": 3.25, "width": 3.25}, {"color": "lightblue", "from": "tesis", "to": "estan", "value": 2.5, "width": 2.5}, {"color": "lightblue", "from": "tesis", "to": "trabajo", "value": 2.5, "width": 2.5}, {"color": "lightblue", "from": "tesis", "to": "profesor", "value": 2.75, "width": 2.75}, {"color": "lightblue", "from": "tesis", "to": "universidad", "value": 3.75, "width": 3.75}, {"color": "lightblue", "from": "tesis", "to": "informacion", "value": 2.5, "width": 2.5}, {"color": "lightblue", "from": "tesis", "to": "lima", "value": 2.625, "width": 2.625}, {"color": "gray", "from": "dia", "to": "pucp", "value": 6.125, "width": 6.125}, {"color": "gray", "from": "dia", "to": "mayo", "value": 2.375, "width": 2.375}, {"color": "gray", "from": "dia", "to": "a\u00f1os", "value": 2.25, "width": 2.25}, {"color": "gray", "from": "dia", "to": "trabajo", "value": 2.125, "width": 2.125}, {"color": "gray", "from": "dia", "to": "ultimo", "value": 2.5, "width": 2.5}, {"color": "gray", "from": "dia", "to": "gracias", "value": 2.25, "width": 2.25}, {"color": "lightblue", "from": "caviares", "to": "universidad", "value": 3.25, "width": 3.25}, {"color": "lightblue", "from": "caviares", "to": "siempre", "value": 2.25, "width": 2.25}, {"color": "lightblue", "from": "caviares", "to": "pucp", "value": 6.0, "width": 6.0}, {"color": "lightblue", "from": "caviares", "to": "izquierda", "value": 1.875, "width": 1.875}, {"color": "lightblue", "from": "caviares", "to": "estan", "value": 2.0, "width": 2.0}, {"color": "lightblue", "from": "caviares", "to": "lima", "value": 2.125, "width": 2.125}, {"color": "lightblue", "from": "trabajo", "to": "investigacion", "value": 1.75, "width": 1.75}, {"color": "lightblue", "from": "trabajo", "to": "tesispucp", "value": 1.875, "width": 1.875}, {"color": "lightblue", "from": "trabajo", "to": "pucp", "value": 6.0, "width": 6.0}, {"color": "lightblue", "from": "trabajo", "to": "derecho", "value": 2.75, "width": 2.75}, {"color": "lightblue", "from": "trabajo", "to": "a\u00f1os", "value": 2.125, "width": 2.125}, {"color": "lightblue", "from": "tesispucp", "to": "a\u00f1os", "value": 2.0, "width": 2.0}, {"color": "lightblue", "from": "tesispucp", "to": "lima", "value": 2.0, "width": 2.0}, {"color": "lightblue", "from": "tesispucp", "to": "universidad", "value": 3.125, "width": 3.125}, {"color": "lightblue", "from": "tesispucp", "to": "informacion", "value": 1.875, "width": 1.875}, {"color": "lightblue", "from": "estan", "to": "pucp", "value": 6.0, "width": 6.0}, {"color": "lightblue", "from": "estan", "to": "lima", "value": 2.125, "width": 2.125}, {"color": "lightblue", "from": "estan", "to": "gracias", "value": 2.125, "width": 2.125}, {"color": "lightblue", "from": "a\u00f1os", "to": "gracias", "value": 2.25, "width": 2.25}, {"color": "lightblue", "from": "a\u00f1os", "to": "pucp", "value": 6.125, "width": 6.125}, {"color": "lightblue", "from": "a\u00f1os", "to": "ultimo", "value": 2.5, "width": 2.5}, {"color": "lightblue", "from": "a\u00f1os", "to": "centro", "value": 2.75, "width": 2.75}, {"color": "gray", "from": "centro", "to": "investigacion", "value": 2.375, "width": 2.375}, {"color": "gray", "from": "centro", "to": "lima", "value": 2.75, "width": 2.75}, {"color": "gray", "from": "centro", "to": "vida", "value": 2.375, "width": 2.375}, {"color": "gray", "from": "centro", "to": "mayo", "value": 2.875, "width": 2.875}, {"color": "gray", "from": "centro", "to": "universidad", "value": 3.875, "width": 3.875}, {"color": "gray", "from": "centro", "to": "profesor", "value": 2.875, "width": 2.875}, {"color": "gray", "from": "centro", "to": "pucp", "value": 6.625, "width": 6.625}, {"color": "gray", "from": "informacion", "to": "mayo", "value": 2.25, "width": 2.25}, {"color": "gray", "from": "informacion", "to": "pucp", "value": 6.0, "width": 6.0}, {"color": "lightblue", "from": "compartir", "to": "pucp", "value": 5.625, "width": 5.625}, {"color": "lightblue", "from": "investigacion", "to": "pucp", "value": 5.75, "width": 5.75}, {"color": "lightblue", "from": "derecho", "to": "pucp", "value": 6.75, "width": 6.75}, {"color": "lightblue", "from": "derecho", "to": "universidad", "value": 4.0, "width": 4.0}, {"color": "lightblue", "from": "derecho", "to": "profesor", "value": 3.0, "width": 3.0}, {"color": "lightblue", "from": "derecho", "to": "siempre", "value": 3.0, "width": 3.0}, {"color": "lightblue", "from": "docente", "to": "mayo", "value": 2.125, "width": 2.125}, {"color": "lightblue", "from": "docente", "to": "universidad", "value": 3.125, "width": 3.125}, {"color": "lightblue", "from": "docente", "to": "pucp", "value": 5.875, "width": 5.875}, {"color": "lightblue", "from": "gracias", "to": "pucp", "value": 6.125, "width": 6.125}, {"color": "lightblue", "from": "gracias", "to": "gracias", "value": 2.25, "width": 2.25}, {"color": "lightblue", "from": "vida", "to": "ultimo", "value": 2.125, "width": 2.125}, {"color": "lightblue", "from": "vida", "to": "pucp", "value": 5.75, "width": 5.75}, {"color": "lightblue", "from": "lima", "to": "pucp", "value": 6.125, "width": 6.125}, {"color": "lightblue", "from": "lima", "to": "universidad", "value": 3.375, "width": 3.375}, {"color": "gray", "from": "mayo", "to": "pucp", "value": 6.25, "width": 6.25}, {"color": "gray", "from": "mayo", "to": "ultimo", "value": 2.625, "width": 2.625}, {"color": "lightblue", "from": "universidad", "to": "caviar", "value": 3.375, "width": 3.375}, {"color": "lightblue", "from": "universidad", "to": "pucp", "value": 7.25, "width": 7.25}, {"color": "lightblue", "from": "universidad", "to": "universidad", "value": 4.5, "width": 4.5}, {"color": "gray", "from": "gestion", "to": "pucp", "value": 5.25, "width": 5.25}, {"color": "lightblue", "from": "siempre", "to": "pucp", "value": 6.25, "width": 6.25}, {"color": "lightblue", "from": "siempre", "to": "izquierda", "value": 2.125, "width": 2.125}, {"color": "lightblue", "from": "siempre", "to": "caviar", "value": 2.375, "width": 2.375}, {"color": "lightblue", "from": "caviar", "to": "ultimo", "value": 2.5, "width": 2.5}, {"color": "lightblue", "from": "caviar", "to": "pucp", "value": 6.125, "width": 6.125}, {"color": "lightblue", "from": "caviar", "to": "izquierda", "value": 2.0, "width": 2.0}, {"color": "lightblue", "from": "profesor", "to": "pucp", "value": 6.25, "width": 6.25}, {"color": "orange", "from": "izquierda", "to": "pucp", "value": 5.875, "width": 5.875}, {"color": "lightblue", "from": "pucp", "to": "pucp", "value": 10.0, "width": 10.0}, {"color": "lightblue", "from": "pucp", "to": "ultimo", "value": 6.375, "width": 6.375}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": true,
+        "filter": [
+            "physics"
+        ]
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "barnesHut": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.3,
+            "damping": 0.09,
+            "gravitationalConstant": -50000,
+            "springConstant": 0.001,
+            "springLength": 250
+        },
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+                  // if this network requires displaying the configure window,
+                  // put it in its div
+                  options.configure["container"] = document.getElementById("config");
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
